@@ -7,12 +7,6 @@
     -   [Installation](#installation)
     -   [Configuration](#configuration)
 -   [Usage](#usage)
--   [API Documentation](#api-documentation)
--   [Database](#database)
--   [Testing](#testing)
--   [Deployment](#deployment)
--   [Contributing](#contributing)
--   [License](#license)
 
 ## Getting Started
 
