@@ -39,11 +39,11 @@ yarn dev
 
 This project uses the following environment variables:
 
-| Name         | Description           | Default Value                                                                                  |
-| ------------ | --------------------- | ---------------------------------------------------------------------------------------------- |
-| PORT         | Port for Express App  | "3000"                                                                                         |
-| MONGODB_URI  | URI of MongoDB Server | "mongodb+srv://kshitij:<password>@cluster0.8fwzadc.mongodb.net/pw?retryWrites=true&w=majority" |
-| SECRET_TOKEN | Token Secret for JWT  | "somesecret"                                                                                   |
+| Name        | Description           | Default Value                                                                                  |
+| ----------- | --------------------- | ---------------------------------------------------------------------------------------------- |
+| PORT        | Port for App          | "3000"                                                                                         |
+| MONGODB_URI | URI of MongoDB Server | "mongodb+srv://kshitij:<password>@cluster0.8fwzadc.mongodb.net/pw?retryWrites=true&w=majority" |
+| JWT_SECRET  | Secret Token for JWT  | "somesecret"                                                                                   |
 
 Test on `http://localhost:3000` at POSTMAN
 
@@ -51,7 +51,7 @@ Test on `http://localhost:3000` at POSTMAN
 
 ### Endpoint 1
 
--   **Route:** `/emp/login`
+-   **Route:** `/api/login`
 -   **Method:** POST
 -   **Description:** Login to backend
 -   **Request Body:**
@@ -71,20 +71,7 @@ Test on `http://localhost:3000` at POSTMAN
 
 ### Endpoint 2
 
--   **Route:** `/emp/add-data`
--   **Method:** POST
--   **Description:** Add JSON data to DB
--   **Authentication:** Bearer Token
-    -   In the request headers, include an `Authorization` header with the Bearer Token:
-        ```
-        Authorization: Bearer YOUR_TOKEN
-        ```
--   **Response:**
-    -   Status: 201 Created
-
-### Endpoint 3
-
--   **Route:** `/emp/add-employee`
+-   **Route:** `/api/add-emp`
 -   **Method:** POST
 -   **Description:** Add Employee details to DB
 -   **Request Body:**
@@ -114,9 +101,9 @@ Test on `http://localhost:3000` at POSTMAN
 -   **Response:**
     -   Status: 201 Created
 
-### Endpoint 4
+### Endpoint 3
 
--   **Route:** `/emp/delete-employee`
+-   **Route:** `/api/delete-emp`
 -   **Method:** DELETE
 -   **Description:** Delete Employee details from DB
 -   **Request Body:**
@@ -146,9 +133,22 @@ Test on `http://localhost:3000` at POSTMAN
 -   **Response:**
     -   Status: 200 OK
 
+### Endpoint 4
+
+-   **Route:** `/api/add-details`
+-   **Method:** POST
+-   **Description:** Add JSON data to DB
+-   **Authentication:** Bearer Token
+    -   In the request headers, include an `Authorization` header with the Bearer Token:
+        ```
+        Authorization: Bearer YOUR_TOKEN
+        ```
+-   **Response:**
+    -   Status: 201 Created
+
 ### Endpoint 5
 
--   **Route:** `/api/statistics`
+-   **Route:** `/api/stats`
 -   **Method:** GET
 -   **Description:** Get Summary Statistics of Salary from DB
 -   **Authentication:** Bearer Token
@@ -162,7 +162,7 @@ Test on `http://localhost:3000` at POSTMAN
 
 ### Endpoint 6
 
--   **Route:** `/api/statistics-contract`
+-   **Route:** `/api/stats-oncontract`
 -   **Method:** GET
 -   **Description:** Get Summary Statistics of Salary from DB who are on Contract
 -   **Authentication:** Bearer Token
@@ -176,7 +176,7 @@ Test on `http://localhost:3000` at POSTMAN
 
 ### Endpoint 7
 
--   **Route:** `/api/statistics-department`
+-   **Route:** `/api/stats-department`
 -   **Method:** GET
 -   **Description:** Get Summary Statistics of Salary from DB by Department
 -   **Authentication:** Bearer Token
@@ -190,7 +190,7 @@ Test on `http://localhost:3000` at POSTMAN
 
 ### Endpoint 8
 
--   **Route:** `/api/statistics-department-subdepartment`
+-   **Route:** `/api/stats-department-subdepartment`
 -   **Method:** GET
 -   **Description:** Get Summary Statistics of Salary from DB by Department and Sub Department
 -   **Authentication:** Bearer Token
