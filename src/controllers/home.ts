@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import Employee from "../models/emp";
 import { USER } from "../constants/constant";
 import jwt from "jsonwebtoken";
@@ -6,14 +6,13 @@ import { data } from "../constants/data";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export async function login(req: Request, res: Response) {
+export async function login(req: Request, res: Response, next: NextFunction) {
     try {
         const { username, password } = req.body;
         if (!username || !password) {
-            return res.status(400).json({
-                status: "Failed",
-                message: "Credentials Not Found",
-            });
+            const error = new Error("Credentials Not Found") as any;
+            error.statusCode = 400;
+            throw error;
         }
         if (username === USER.username && password === USER.password) {
             const token = await jwt.sign(
@@ -31,21 +30,23 @@ export async function login(req: Request, res: Response) {
                 token,
             });
         } else {
-            res.status(400).json({
-                status: "Failed",
-                message: "Invalid Username or Password",
-            });
+            const error = new Error("Invalid Username or Password") as any;
+            error.statusCode = 400;
+            throw error;
         }
     } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went Wrong",
-        });
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 }
 
-export async function addEmployee(req: Request, res: Response) {
+export async function addEmployee(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
         const {
             name,
@@ -63,10 +64,9 @@ export async function addEmployee(req: Request, res: Response) {
             !sub_department ||
             !on_contract
         ) {
-            return res.status(400).json({
-                status: "Failed",
-                message: "Missing Info",
-            });
+            const error = new Error("Missing Info") as any;
+            error.statusCode = 400;
+            throw error;
         }
         const emp = new Employee({
             name,
@@ -82,14 +82,18 @@ export async function addEmployee(req: Request, res: Response) {
             message: "New Employee Added",
         });
     } catch (err) {
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went Wrong",
-        });
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 }
 
-export async function deleteEmployee(req: Request, res: Response) {
+export async function deleteEmployee(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
         const {
             name,
@@ -107,10 +111,9 @@ export async function deleteEmployee(req: Request, res: Response) {
             !sub_department ||
             !on_contract
         ) {
-            return res.status(400).json({
-                status: "Failed",
-                message: "Missing Info",
-            });
+            const error = new Error("Missing Info") as any;
+            error.statusCode = 400;
+            throw error;
         }
         const deletedEmp = await Employee.findOneAndDelete({
             name,
@@ -126,20 +129,23 @@ export async function deleteEmployee(req: Request, res: Response) {
                 message: "Employee Removed",
             });
         } else {
-            res.status(404).json({
-                status: "Failed",
-                message: "Employee Not Found",
-            });
+            const error = new Error("Employee Not Found") as any;
+            error.statusCode = 404;
+            throw error;
         }
     } catch (err) {
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went Wrong",
-        });
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 }
 
-export async function addDetails(_req: Request, res: Response) {
+export async function addDetails(
+    _req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
         for (let emp of data) {
             await Employee.findOneAndUpdate(emp, emp, {
@@ -151,14 +157,14 @@ export async function addDetails(_req: Request, res: Response) {
             message: "Employees Data Added",
         });
     } catch (err) {
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went Wrong, Data Not Added",
-        });
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 }
 
-export async function getSS(_req: Request, res: Response) {
+export async function getSS(_req: Request, res: Response, next: NextFunction) {
     try {
         const pipeline = [
             {
@@ -186,14 +192,18 @@ export async function getSS(_req: Request, res: Response) {
             data: salaryStats,
         });
     } catch (err) {
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went Wrong",
-        });
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 }
 
-export async function getSSOfOnContract(_req: Request, res: Response) {
+export async function getSSOfOnContract(
+    _req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
         const pipeline = [
             {
@@ -226,14 +236,18 @@ export async function getSSOfOnContract(_req: Request, res: Response) {
             data: salaryStats,
         });
     } catch (err) {
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went Wrong",
-        });
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 }
 
-export async function getSSByDepartment(_req: Request, res: Response) {
+export async function getSSByDepartment(
+    _req: Request,
+    res: Response,
+    next: NextFunction
+) {
     try {
         const departmentStats = await Employee.aggregate([
             {
@@ -250,16 +264,17 @@ export async function getSSByDepartment(_req: Request, res: Response) {
             data: departmentStats,
         });
     } catch (err) {
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went Wrong",
-        });
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 }
 
 export async function getSSByDepartmentSubdepartment(
     _req: Request,
-    res: Response
+    res: Response,
+    next: NextFunction
 ) {
     try {
         const pipeline = [
@@ -293,9 +308,9 @@ export async function getSSByDepartmentSubdepartment(
             data: departmentSubdepartmentStats,
         });
     } catch (err) {
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went Wrong",
-        });
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 }

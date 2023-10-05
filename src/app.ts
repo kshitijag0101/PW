@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { connect } from "mongoose";
 import homeRoutes from "./routes/home";
 
@@ -13,6 +13,18 @@ app.use("/api", homeRoutes);
 
 app.get("/check", (_req: Request, res: Response) => {
     res.status(200).json({ status: "working" });
+});
+
+app.use((error: any, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(error);
+    const statusCode = error.statusCode || 500;
+    const errorMessage = error.message;
+    const errorData = error.data;
+    return res.status(statusCode).json({
+        status: "Failed",
+        error: errorMessage,
+        data: errorData,
+    });
 });
 
 async function connectMongoDB() {
