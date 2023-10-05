@@ -39,11 +39,11 @@ yarn dev
 
 This project uses the following environment variables:
 
-| Name        | Description           | Default Value                                                                                  |
-| ----------- | --------------------- | ---------------------------------------------------------------------------------------------- |
-| PORT        | Port for App          | "3000"                                                                                         |
-| MONGODB_URI | URI of MongoDB Server | "mongodb+srv://kshitij:<password>@cluster0.8fwzadc.mongodb.net/pw?retryWrites=true&w=majority" |
-| JWT_SECRET  | Secret Token for JWT  | "somesecret"                                                                                   |
+| Name        | Description           | Default Value                 |
+| ----------- | --------------------- | ----------------------------- |
+| PORT        | Port for App          | "3000"                        |
+| MONGODB_URI | URI of MongoDB Server | "mongodb://0.0.0.0:27017/emp" |
+| JWT_SECRET  | Secret Token for JWT  | "somesecret"                  |
 
 Test on `http://localhost:3000` at POSTMAN
 

@@ -3,28 +3,21 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export async function isAuth(req: Request, res: Response, next: NextFunction) {
-    const authHeader = req.get("Authorization");
-    if (!authHeader) {
-        return res.status(400).json({
-            status: "Failed",
-            message: "Missing Token",
-        });
-    }
-    const token = authHeader.split(" ")[1];
+export async function isAuth(req: Request, _res: Response, next: NextFunction) {
     try {
+        const authHeader = req.get("Authorization");
+        if (!authHeader) {
+            const error = new Error("Missing Token") as any;
+            error.statusCode = 400;
+            throw error;
+        }
+        const token = authHeader.split(" ")[1];
         (await jwt.verify(token, JWT_SECRET)) as JwtPayload;
         next();
     } catch (err) {
-        if (err.name === "TokenExpiredError") {
-            return res.status(400).json({
-                status: "Failed",
-                message: "Expired Token",
-            });
+        if (!err.statusCode) {
+            err.statusCode = 500;
         }
-        res.status(400).json({
-            status: "Failed",
-            message: "Wrong Token",
-        });
+        next(err);
     }
 }

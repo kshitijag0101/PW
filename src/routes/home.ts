@@ -8,7 +8,7 @@ router
     .post("/login", Employee.login)
     .post("/add-emp", isAuth, Employee.addEmployee)
     .delete("/delete-emp", Employee.deleteEmployee)
-    .post("add-details", isAuth, Employee.addDetails)
+    .post("/add-details", isAuth, Employee.addDetails)
     .get("/stats", isAuth, Employee.getSS)
     .get("/stats-oncontract", isAuth, Employee.getSSOfOnContract)
     .get("/stats-department", isAuth, Employee.getSSByDepartment)
